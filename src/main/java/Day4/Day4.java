@@ -28,6 +28,7 @@ public class Day4 {
             }
         }
         System.out.println(mark(map, draw));
+
     }
 
     private int mark(HashMap<Spot, List<Board>> map, List<Spot> draw) {
@@ -92,7 +93,9 @@ public class Day4 {
                     if (get(i).get(j).isMarked()) rows++;
                     if (get(j).get(i).isMarked()) cols++;
 
-                    if (rows == 5 || cols == 5) return true;
+                    if (rows == 5 || cols == 5) {
+                        return true;
+                    }
                 }
             }
             return false;

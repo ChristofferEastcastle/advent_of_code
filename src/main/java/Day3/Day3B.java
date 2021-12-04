@@ -25,7 +25,6 @@ public class Day3B {
     }
 
     private static int findOxygenRating(ArrayList<String> list, int[] answer) {
-        //int[] answer = {0};
         find(list, 0, answer, true);
 
         return answer[0];
@@ -40,32 +39,40 @@ public class Day3B {
 
     private static void find(List<String> list, int i, int[] answer, boolean findingOxygen) {
         if (list.size() == 1) {
-            String s = list.get(0);
-            int pow = s.length() - 1;
-            for (String bits : s.split("")) {
-                answer[0] += Integer.parseInt(bits) * Math.pow(2, pow--);
-            }
+            getDecimalValue(list, answer);
             return;
         }
 
-        var mapBits = mapBits(list);
+        var listMap = mapBits(list).get(i++);
+        List<String> ones = listMap.get(1);
+        List<String> zeros = listMap.get(0);
 
-        var listMap = mapBits.get(i++);
-        int ones = listMap.get(1).size();
-        int zeros = listMap.get(0).size();
+        list = chooseList(findingOxygen, ones, zeros);
+        find(list, i, answer, findingOxygen);
+    }
 
+    private static List<String> chooseList(boolean findingOxygen, List<String> ones, List<String> zeros) {
+        List<String> list;
         if (findingOxygen) {
-            if (zeros > ones) {
-                find(listMap.get(0), i, answer, true);
+            if (zeros.size() > ones.size()) {
+                list = zeros;
             } else {
-                find(listMap.get(1), i, answer, true);
+                list = ones;
             }
         } else {
-            if (zeros <= ones) {
-                find(listMap.get(0), i, answer, false);
+            if (zeros.size() <= ones.size()) {
+                list = zeros;
             } else {
-                find(listMap.get(1), i, answer, false);
+                list = ones;
             }
+        }
+        return list;
+    }
+
+    private static void getDecimalValue(List<String> list, int[] answer) {
+        int pow = list.get(0).length() - 1;
+        for (String bits : list.get(0).split("")) {
+            answer[0] += Integer.parseInt(bits) * Math.pow(2, pow--);
         }
     }
 
@@ -91,5 +98,4 @@ public class Day3B {
         }
         return map;
     }
-
 }
