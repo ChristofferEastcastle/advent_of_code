@@ -1,2 +1,5 @@
 /.vscode/
 *.exe
+/out/
+/.idea/
+/advent_of_code.iml
