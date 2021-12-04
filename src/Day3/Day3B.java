@@ -56,15 +56,15 @@ public class Day3B {
 
         if (findingOxygen) {
             if (zeros > ones) {
-                find(listMap.get(0), i, answer, findingOxygen);
+                find(listMap.get(0), i, answer, true);
             } else {
-                find(listMap.get(1), i, answer, findingOxygen);
+                find(listMap.get(1), i, answer, true);
             }
         } else {
             if (zeros <= ones) {
-                find(listMap.get(0), i, answer, findingOxygen);
+                find(listMap.get(0), i, answer, false);
             } else {
-                find(listMap.get(1), i, answer, findingOxygen);
+                find(listMap.get(1), i, answer, false);
             }
         }
     }
