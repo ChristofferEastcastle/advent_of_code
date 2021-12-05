@@ -1,27 +1,54 @@
 package Day3;
 
 import java.io.File;
-import java.io.FileNotFoundException;
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Scanner;
+import java.util.stream.Collectors;
 
 public class Day3B {
-    public static void main(String[] args) throws FileNotFoundException, InterruptedException {
+    public static void main(String[] args) throws IOException {
         Scanner sc = new Scanner(new File("input3.txt"));
-        ArrayList<String> list = new ArrayList<>();
+
+        List<String> list = new ArrayList<>();
+        var list2 = new ArrayList<>(list);
         while (sc.hasNextLine()) {
             list.add(sc.nextLine());
         }
-        int[] answer = {0};
-        Thread thread = new Thread(() -> findOxygenRating(list, answer));
-        thread.start();
 
-        int co2Rating = findCO2Rating(list);
+        int oxygen = findResult(list, true);
+        int co2 = findResult(list, false);
 
-        thread.join();
-        System.out.println(answer[0] * co2Rating);
+        System.out.println(oxygen * co2);
+    }
+
+    private static int findResult(List<String> list, boolean findingOxygen) {
+        int[] i = {0};
+        while (list.size() > 1) {
+            long ones = list.stream().filter(s -> s.charAt(i[0]) == '1').count();
+            long zeros = list.stream().filter(s -> s.charAt(i[0]) == '0').count();
+            char c;
+            if (findingOxygen) {
+                if (ones >= zeros) {
+                    c = '1';
+                } else {
+                    c = '0';
+                }
+            } else {
+                if (zeros <= ones) {
+                    c = '0';
+                } else {
+                    c = '1';
+                }
+            }
+            list = list.stream().filter(s -> s.charAt(i[0]) == c).collect(Collectors.toList());
+            i[0]++;
+        }
+        i[0] = 0;
+        getDecimalValue(list, i);
+        return i[0];
     }
 
     private static int findOxygenRating(ArrayList<String> list, int[] answer) {
