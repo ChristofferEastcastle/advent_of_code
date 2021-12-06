@@ -1,4 +1,4 @@
-package Day1;
+package aoc.Day1;
 
 import java.io.File;
 import java.io.FileNotFoundException;
