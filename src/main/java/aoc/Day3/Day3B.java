@@ -1,4 +1,4 @@
-package Day3;
+package aoc.Day3;
 
 import java.io.File;
 import java.io.IOException;

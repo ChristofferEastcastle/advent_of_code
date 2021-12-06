@@ -1,11 +1,11 @@
-package Day4;
+package aoc.Day4;
 
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.util.*;
 import java.util.stream.Collectors;
 
-public class Day4B {
+public class Day4 {
     public void solve() throws FileNotFoundException {
         Scanner sc = new Scanner(new File("input4.txt"));
 
@@ -32,20 +32,15 @@ public class Day4B {
     }
 
     private int mark(HashMap<Spot, List<Board>> map, List<Spot> draw) {
-        int wins = 0;
         for (Spot spot : draw) {
             for (Board board : map.get(spot)) {
-                if (board.hasWon) continue;
                 List<List<Spot>> lists = board.board;
                 for (List<Spot> spots : lists) {
                     for (Spot spot1 : spots) {
                         if (spot1.equals(spot)) {
                             spot1.setMarked(true);
                             if (board.hasBingo()) {
-                                board.hasWon = true;
-                                wins++;
-                                if (wins == 100)
-                                    return board.calculate(spot);
+                                return board.calculate(spot);
                             }
                         }
                     }
@@ -56,8 +51,7 @@ public class Day4B {
     }
 
     class Board {
-        private List<List<Spot>> board = new ArrayList<>();
-        private boolean hasWon = false;
+        List<List<Spot>> board = new ArrayList<>();
 
         public Board(List<String> list, HashMap<Spot, List<Board>> map) {
             for (String s : list) {
