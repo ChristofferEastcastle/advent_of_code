@@ -1,36 +1,96 @@
 package aoc.Knowit;
 
 import java.io.FileInputStream;
+import java.io.FileNotFoundException;
 import java.io.IOException;
+import java.nio.charset.StandardCharsets;
 import java.util.*;
 
 public class Dag1 {
-    public void solve() throws IOException {
-        FileInputStream stream = new FileInputStream("tall_test.txt");
+    private HashMap<String, Integer> map = createMap();
 
-        var map = createMap();
-
+    public void solve() throws FileNotFoundException {
+        Scanner sc = new Scanner(new FileInputStream("tall_test.txt"));
+        char[] arr = sc.nextLine().toCharArray();
         StringBuilder buf = new StringBuilder();
-
-        int total = 0, temp, last = -1;
-        byte[] bytes = stream.readAllBytes();
-        for (int i = bytes.length - 1; i >= 0; i--) {
-            byte b = bytes[i];
-            buf.insert(0, (char) b);
+        int total = 0, num, last = -1;
+        for (int i = 0; i < arr.length; i++) {
+            char c = arr[i];
+            if (c == 65533) c = 'å';
             if (map.containsKey(buf.toString())) {
-                int num = map.get(buf.toString());
-                if (last != -1) {
-                    total += num;
-                    buf.setLength(0);
-                } else {
-                    last = num;
+                String temp = buf.toString();
+                if (buf.toString().equals("tre")) {
+                    if (i + 4 < arr.length) {
+                        String s = read(arr, i, i + 4);
+                        if ((temp + s).equals("tretten")) {
+                            i += 4;
+                            temp = "tretten";
+                        }
+                    }
+                    String s = read(arr, i, i + 3);
+
+                    if ((temp + s).equals("tretti")) {
+                        i += 3;
+                        temp = "tretti";
+                    }
+                } else if (temp.equals("fem")) {
+                    if (i + 3 < arr.length) {
+                        String s = read(arr, i, i + 3);
+                        if ((temp + s).equals("femten")) {
+                            i += 3;
+                            temp = "femten";
+                        }
+                        s = read(arr, i, i + 2);
+                        if ((temp + s).equals("femti")) {
+                            i += 2;
+                            temp = "femti";
+                        }
+
+                    }
+                } else if (temp.equals("seks")) {
+                    String s = read(arr, i, i + 3);
+                    if ((temp + s).equals("seksten")) {
+                        i += 3;
+                        temp = "seksten";
+                    }
+                } else if (temp.equals("ni")) {
+                    String s = read(arr, i, i + 4);
+                    if ((temp + s).equals("nitten")) {
+                        i += 4;
+                        temp = "nitten";
+                    }
                 }
+                num = map.get(temp);
+
+                if (last != -1) {
+                    total += last + num;
+                    last = -1;
+                } else {
+                    switch (num) {
+                        case 20, 30, 40 -> last = num;
+                        default -> total += num;
+                    }
+                }
+                buf.setLength(0);
             }
+            buf.append( c);
         }
-
+        if (buf.length() != 0) total += map.get(buf.toString());
+        if (last != -1) total += last;
         System.out.println(total);
-
     }
+
+    private String read(char[] bytes, int i, int n) {
+        if (i > n) {
+            throw new IllegalArgumentException("i cannot be larger than n");
+        }
+        StringBuilder buf = new StringBuilder();
+        while (i < n) {
+            buf.append(bytes[i++]);
+        }
+        return buf.toString();
+    }
+
 
     HashMap<String, Integer> createMap() {
         HashMap<String, Integer> map = new HashMap<>();
